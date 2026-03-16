@@ -26,7 +26,7 @@ function Products() {
         <div
           key={product.id}
           style={{
-            border: "1px solid #ccc",
+            border: "1px solid #47057a",
             margin: "10px",
             padding: "10px",
             width: "px"

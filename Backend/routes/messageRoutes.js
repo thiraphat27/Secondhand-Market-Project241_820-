@@ -1,9 +1,11 @@
 const express = require("express");
-const router = express.Router();
 const messageController = require("../controllers/messageController");
+const { protect } = require("../middleware/authMiddleware");
 
-router.post("/", messageController.sendMessage);
+const router = express.Router();
+
+router.post("/", protect, messageController.sendMessage);
 router.get("/product/:id", messageController.getMessagesByProduct);
-router.get("/user/:id", messageController.getMessagesByUser);
+router.get("/user/:id", protect, messageController.getMessagesByUser);
 
 module.exports = router;

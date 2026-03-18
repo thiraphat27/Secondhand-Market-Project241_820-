@@ -1,76 +1,131 @@
 import { useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../lib/api";
+
+const initialForm = {
+  title: "",
+  description: "",
+  price: "",
+  category_id: "",
+};
 
 function AddProduct() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialForm);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
 
     try {
+      setIsSubmitting(true);
 
-      await axios.post("http://localhost:5000/api/products", {
-        title,
-        description,
-        price
+      await api.post("/products", {
+        ...formData,
+        category_id: formData.category_id ? Number(formData.category_id) : null,
+        price: Number(formData.price),
       });
 
-      alert("Product added");
+      setFormData(initialForm);
+      setSuccess("Product added successfully.");
 
-      setTitle("");
-      setDescription("");
-      setPrice("");
-
-    } catch (error) {
-      console.error(error);
-      alert("Error adding product");
+      window.setTimeout(() => {
+        navigate("/");
+      }, 700);
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message || "Unable to create the product."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div style={{ textAlign:"center", marginTop:"50px" }}>
+    <section className="card card-narrow">
+      <div className="stack-sm">
+        <p className="eyebrow">Seller Tools</p>
+        <h2>Create a new listing</h2>
+        <p className="muted">
+          Logged-in users create products under their own account automatically.
+        </p>
+      </div>
 
-      <h2>Add Product</h2>
+      <form className="stack-md" onSubmit={handleSubmit}>
+        <label className="field">
+          <span>Title</span>
+          <input
+            className="input"
+            name="title"
+            onChange={handleChange}
+            placeholder="Vintage camera"
+            required
+            type="text"
+            value={formData.title}
+          />
+        </label>
 
-      <form onSubmit={handleSubmit}>
+        <label className="field">
+          <span>Description</span>
+          <textarea
+            className="input textarea"
+            name="description"
+            onChange={handleChange}
+            placeholder="Condition, brand, pickup details, and anything buyers should know."
+            required
+            value={formData.description}
+          />
+        </label>
 
-        <input
-          type="text"
-          placeholder="Product name"
-          value={title}
-          onChange={(e)=>setTitle(e.target.value)}
-        />
+        <div className="form-grid">
+          <label className="field">
+            <span>Price</span>
+            <input
+              className="input"
+              min="0"
+              name="price"
+              onChange={handleChange}
+              placeholder="1500"
+              required
+              type="number"
+              value={formData.price}
+            />
+          </label>
 
-        <br/><br/>
+          <label className="field">
+            <span>Category ID</span>
+            <input
+              className="input"
+              min="1"
+              name="category_id"
+              onChange={handleChange}
+              placeholder="Optional"
+              type="number"
+              value={formData.category_id}
+            />
+          </label>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e)=>setDescription(e.target.value)}
-        />
+        {error ? <div className="error-banner">{error}</div> : null}
+        {success ? <div className="success-banner">{success}</div> : null}
 
-        <br/><br/>
-
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e)=>setPrice(e.target.value)}
-        />
-
-        <br/><br/>
-
-        <button type="submit">
-          Add Product
+        <button className="primary-button" disabled={isSubmitting} type="submit">
+          {isSubmitting ? "Saving..." : "Add Product"}
         </button>
-
       </form>
-
-    </div>
+    </section>
   );
 }
 

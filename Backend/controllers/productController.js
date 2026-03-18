@@ -1,261 +1,259 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
-// CREATE PRODUCT
 exports.createProduct = async (req, res) => {
+  const { title, description, price, category_id = null } = req.body;
+
+  if (!title || !description || price === undefined || price === null || price === "") {
+    return res.status(400).json({
+      message: "title, description, and price are required",
+    });
+  }
 
   try {
+    const [result] = await db.query(
+      `
+        INSERT INTO products (title, description, price, category_id, user_id)
+        VALUES (?, ?, ?, ?, ?)
+      `,
+      [title, description, price, category_id, req.user.id]
+    );
 
-    const { title, description, price, category_id, user_id } = req.body;
+    const [rows] = await db.query(
+      `
+        SELECT
+          products.*,
+          users.username,
+          categories.name AS category_name
+        FROM products
+        LEFT JOIN users ON products.user_id = users.id
+        LEFT JOIN categories ON products.category_id = categories.id
+        WHERE products.id = ?
+        LIMIT 1
+      `,
+      [result.insertId]
+    );
 
-    const sql = `
-      INSERT INTO products 
-      (title, description, price, category_id, user_id) 
-      VALUES (?, ?, ?, ?, ?)
-    `;
-
-    const [result] = await db.query(sql, [
-      title,
-      description,
-      price,
-      category_id,
-      user_id
-    ]);
-
-    res.json({
+    return res.status(201).json({
       message: "Product created",
-      productId: result.insertId
+      product: rows[0],
     });
-
   } catch (error) {
-
-    res.status(500).json({
-      error: error.message
+    return res.status(500).json({
+      message: error.message,
     });
-
   }
-
 };
 
-
-// GET ALL PRODUCTS
 exports.getProducts = async (req, res) => {
-
   try {
-
-    const sql = `
-      SELECT 
+    const [rows] = await db.query(`
+      SELECT
         products.*,
         users.username,
         categories.name AS category_name
       FROM products
       LEFT JOIN users ON products.user_id = users.id
       LEFT JOIN categories ON products.category_id = categories.id
-      ORDER BY products.created_at DESC
-    `;
+      ORDER BY products.created_at DESC, products.id DESC
+    `);
 
-    const [rows] = await db.query(sql);
-
-    res.json(rows);
-
+    return res.json(rows);
   } catch (error) {
-
-    res.status(500).json({
-      error: error.message
+    return res.status(500).json({
+      message: error.message,
     });
-
   }
-
 };
 
-
-// GET PRODUCT BY ID
 exports.getProductById = async (req, res) => {
-
   try {
-
-    const { id } = req.params;
-
-    const sql = `
-      SELECT 
-        products.*,
-        users.username,
-        categories.name AS category_name
-      FROM products
-      LEFT JOIN users ON products.user_id = users.id
-      LEFT JOIN categories ON products.category_id = categories.id
-      WHERE products.id = ?
-    `;
-
-    const [rows] = await db.query(sql, [id]);
-
-    res.json(rows[0]);
-
-  } catch (error) {
-
-    res.status(500).json({
-      error: error.message
-    });
-
-  }
-
-};
-
-
-// GET PRODUCTS BY CATEGORY
-exports.getProductsByCategory = async (req, res) => {
-
-  try {
-
     const { id } = req.params;
 
     const [rows] = await db.query(
       `
-      SELECT 
-        products.*,
-        users.username,
-        categories.name AS category_name
-      FROM products
-      JOIN users ON products.user_id = users.id
-      JOIN categories ON products.category_id = categories.id
-      WHERE categories.id = ?
+        SELECT
+          products.*,
+          users.username,
+          categories.name AS category_name
+        FROM products
+        LEFT JOIN users ON products.user_id = users.id
+        LEFT JOIN categories ON products.category_id = categories.id
+        WHERE products.id = ?
+        LIMIT 1
       `,
       [id]
     );
 
-    res.json(rows);
+    if (rows.length === 0) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
 
+    return res.json(rows[0]);
   } catch (error) {
-
-    res.status(500).json({
-      error: error.message
+    return res.status(500).json({
+      message: error.message,
     });
-
   }
-
 };
 
-// DELETE PRODUCT
-exports.deleteProduct = async (req, res) => {
-
+exports.getProductsByCategory = async (req, res) => {
   try {
-
     const { id } = req.params;
 
-    const sql = `
-      DELETE FROM products
-      WHERE id = ?
-    `;
+    const [rows] = await db.query(
+      `
+        SELECT
+          products.*,
+          users.username,
+          categories.name AS category_name
+        FROM products
+        LEFT JOIN users ON products.user_id = users.id
+        LEFT JOIN categories ON products.category_id = categories.id
+        WHERE products.category_id = ?
+        ORDER BY products.created_at DESC, products.id DESC
+      `,
+      [id]
+    );
 
-    const [result] = await db.query(sql, [id]);
-
-    res.json({
-      message: "Product deleted"
-    });
-
+    return res.json(rows);
   } catch (error) {
-
-    res.status(500).json({
-      error: error.message
+    return res.status(500).json({
+      message: error.message,
     });
-
   }
-
 };
 
-// SEARCH PRODUCTS
-exports.searchProducts = async (req, res) => {
-
+exports.getProductsByUser = async (req, res) => {
   try {
+    const { id } = req.params;
 
-    const { q } = req.query;
+    const [rows] = await db.query(
+      `
+        SELECT
+          products.*,
+          categories.name AS category_name
+        FROM products
+        LEFT JOIN categories ON products.category_id = categories.id
+        WHERE products.user_id = ?
+        ORDER BY products.created_at DESC, products.id DESC
+      `,
+      [id]
+    );
 
-    const sql = `
-      SELECT 
-        products.*,
-        users.username,
-        categories.name AS category_name
-      FROM products
-      LEFT JOIN users ON products.user_id = users.id
-      LEFT JOIN categories ON products.category_id = categories.id
-      WHERE products.title LIKE ? OR products.description LIKE ?
-    `;
+    return res.json(rows);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
+exports.searchProducts = async (req, res) => {
+  try {
+    const { q = "" } = req.query;
     const search = `%${q}%`;
 
-    const [rows] = await db.query(sql, [search, search]);
+    const [rows] = await db.query(
+      `
+        SELECT
+          products.*,
+          users.username,
+          categories.name AS category_name
+        FROM products
+        LEFT JOIN users ON products.user_id = users.id
+        LEFT JOIN categories ON products.category_id = categories.id
+        WHERE products.title LIKE ? OR products.description LIKE ?
+        ORDER BY products.created_at DESC, products.id DESC
+      `,
+      [search, search]
+    );
 
-    res.json(rows);
-
+    return res.json(rows);
   } catch (error) {
-
-    res.status(500).json({
-      error: error.message
+    return res.status(500).json({
+      message: error.message,
     });
-
   }
-
 };
 
-// GET PRODUCTS BY USER
-exports.getProductsByUser = async (req, res) => {
-
-  try {
-
-    const { id } = req.params;
-
-    const sql = `
-      SELECT *
-      FROM products
-      WHERE user_id = ?
-      ORDER BY created_at DESC
-    `;
-
-    const [rows] = await db.query(sql, [id]);
-
-    res.json(rows);
-
-  } catch (error) {
-
-    res.status(500).json({
-      error: error.message
-    });
-
-  }
-
-};
-
-// UPDATE PRODUCT
 exports.updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, price, category_id = null } = req.body;
 
-  try {
-
-    const { id } = req.params;
-    const { title, description, price, category_id } = req.body;
-
-    const sql = `
-      UPDATE products
-      SET title = ?, description = ?, price = ?, category_id = ?
-      WHERE id = ?
-    `;
-
-    const [result] = await db.query(sql, [
-      title,
-      description,
-      price,
-      category_id,
-      id
-    ]);
-
-    res.json({
-      message: "Product updated"
+  if (!title || !description || price === undefined || price === null || price === "") {
+    return res.status(400).json({
+      message: "title, description, and price are required",
     });
-
-  } catch (error) {
-
-    res.status(500).json({
-      error: error.message
-    });
-
   }
 
+  try {
+    const [products] = await db.query(
+      "SELECT id, user_id FROM products WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (products.length === 0) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    if (Number(products[0].user_id) !== Number(req.user.id)) {
+      return res.status(403).json({
+        message: "You can only update your own products",
+      });
+    }
+
+    await db.query(
+      `
+        UPDATE products
+        SET title = ?, description = ?, price = ?, category_id = ?
+        WHERE id = ?
+      `,
+      [title, description, price, category_id, id]
+    );
+
+    return res.json({
+      message: "Product updated",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [products] = await db.query(
+      "SELECT id, user_id FROM products WHERE id = ? LIMIT 1",
+      [id]
+    );
+
+    if (products.length === 0) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    if (Number(products[0].user_id) !== Number(req.user.id)) {
+      return res.status(403).json({
+        message: "You can only delete your own products",
+      });
+    }
+
+    await db.query("DELETE FROM products WHERE id = ?", [id]);
+
+    return res.json({
+      message: "Product deleted",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };

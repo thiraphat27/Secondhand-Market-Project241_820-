@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f3f3;
+  color: #222;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.topbar,
+.section-head,
+.product-card-head,
+.product-actions,
+.topbar-actions,
+.tabs,
+.search-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.panel-wide {
+  grid-column: span 2;
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.button {
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  background: #166534;
+  color: #fff;
+  cursor: pointer;
+}
+
+.button.secondary {
+  background: #666;
+}
+
+.button.danger {
+  background: #b91c1c;
+}
+
+.tab-button {
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tab-button.active {
+  background: #166534;
+  border-color: #166534;
+  color: #fff;
+}
+
+.product-list,
+.inbox-list {
+  display: grid;
+  gap: 12px;
+}
+
+.product-card,
+.inbox-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fafafa;
+}
+
+.message {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.message.info {
+  background: #e8f1ff;
+  color: #0f3d91;
+}
+
+.message.success {
+  background: #e8f7ec;
+  color: #166534;
+}
+
+.message.error {
+  background: #fdecec;
+  color: #b91c1c;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #e5e5e5;
+  font-size: 14px;
+}
+
+.muted {
+  color: #666;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .panel-wide {
+    grid-column: span 1;
+  }
+
+  .topbar,
+  .section-head,
+  .search-row,
+  .product-card-head,
+  .product-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

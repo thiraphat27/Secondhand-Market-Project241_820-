@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IT Secondhand Marketplace</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div>
+          <h1>IT Secondhand Marketplace</h1>
+          <p class="muted">
+            สินค้าและบริการมือสองสำหรับทุกคน สามารถลงขายได้ง่ายๆ และค้นหาสินค้าที่ต้องการได้อย่างรวดเร็ว
+          </p>
+        </div>
+        <div class="topbar-actions">
+          <span id="auth-status" class="status-pill">Guest</span>
+          <button id="logout-button" class="button secondary hidden" type="button">
+            Logout
+          </button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel">
+          <h2>Account</h2>
+          <div class="tabs">
+            <button id="show-login" class="tab-button active" type="button">Login</button>
+            <button id="show-register" class="tab-button" type="button">Register</button>
+          </div>
+
+          <form id="login-form" class="stack">
+            <label>
+              <span>Email</span>
+              <input name="email" required type="email" />
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" required type="password" />
+            </label>
+            <button class="button" type="submit">Login</button>
+          </form>
+
+          <form id="register-form" class="stack hidden">
+            <label>
+              <span>Username</span>
+              <input name="username" required type="text" />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" required type="email" />
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" minlength="6" required type="password" />
+            </label>
+            <button class="button" type="submit">Register</button>
+          </form>
+
+          <div id="auth-message" class="message hidden"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Add Product</h2>
+          <form id="product-form" class="stack">
+            <label>
+              <span>Title</span>
+              <input name="title" required type="text" />
+            </label>
+            <label>
+              <span>Description</span>
+              <textarea name="description" required rows="4"></textarea>
+            </label>
+            <label>
+              <span>Price</span>
+              <input min="0" name="price" required type="number" />
+            </label>
+            <label>
+              <span>Category ID</span>
+              <input min="1" name="category_id" type="number" />
+            </label>
+            <button class="button" type="submit">Save Product</button>
+          </form>
+          <div id="product-message" class="message hidden"></div>
+        </section>
+
+        <section class="panel panel-wide">
+          <div class="section-head">
+            <h2>Products</h2>
+            <form id="search-form" class="search-row">
+              <input id="search-input" placeholder="Search product..." type="text" />
+              <button class="button" type="submit">Search</button>
+            </form>
+          </div>
+
+          <div id="products-message" class="message hidden"></div>
+          <div id="product-list" class="product-list"></div>
+        </section>
+
+        <section class="panel panel-wide">
+          <div class="section-head">
+            <h2>Inbox</h2>
+            <button id="refresh-inbox" class="button secondary" type="button">
+              Refresh Inbox
+            </button>
+          </div>
+          <div id="inbox-message" class="message hidden"></div>
+          <div id="inbox-list" class="inbox-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="product-card-template">
+      <article class="product-card">
+        <div class="product-card-head">
+          <strong class="product-title"></strong>
+          <span class="product-price"></span>
+        </div>
+        <p class="product-description"></p>
+        <p class="muted product-meta"></p>
+        <div class="product-actions"></div>
+      </article>
+    </template>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

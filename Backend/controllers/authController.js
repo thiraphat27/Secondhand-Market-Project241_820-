@@ -1,3 +1,4 @@
+//AuthController สำหรับ register และ login
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db");
@@ -13,6 +14,7 @@ const generateToken = (user) =>
     { expiresIn: "7d" }
   );
 
+//REGISTER
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -33,7 +35,7 @@ exports.register = async (req, res) => {
         message: "Email is already in use",
       });
     }
-
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await db.query(
@@ -59,6 +61,7 @@ exports.register = async (req, res) => {
   }
 };
 
+//LOGIN
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -105,6 +108,7 @@ exports.login = async (req, res) => {
   }
 };
 
+//GET CURRENT USER
 exports.getCurrentUser = async (req, res) => {
   return res.json({
     user: req.user,

@@ -1,3 +1,4 @@
+//กำหนดเส้นทางสำหรับการส่งข้อความระหว่างผู้ใช้และผู้ขาย
 const express = require("express");
 const messageController = require("../controllers/messageController");
 const { protect } = require("../middleware/authMiddleware");

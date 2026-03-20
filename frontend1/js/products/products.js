@@ -1,3 +1,4 @@
+// สินค้าต่างๆ
 import { getCategoryLabel, normalizeCategoryId } from "../categories/categories.js";
 import { apiFetch } from "../core/api.js";
 import { elements } from "../core/elements.js";
@@ -5,6 +6,7 @@ import { state } from "../core/state.js";
 import { formatPrice, makeButton, showMessage } from "../core/ui.js";
 import { handleSendMessage } from "../messages/messages.js";
 
+// สร้างสินค้า
 export async function handleCreateProduct(event) {
   event.preventDefault();
 
@@ -35,6 +37,7 @@ export async function handleCreateProduct(event) {
   }
 }
 
+// ช่องเอาไว้ค้นหา
 export async function handleSearch(event) {
   event.preventDefault();
   state.search = elements.searchInput.value.trim();
@@ -55,6 +58,7 @@ export async function loadProducts(keyword = "") {
   }
 }
 
+// แสดงสินค้า
 export function renderProducts(products) {
   elements.productList.innerHTML = "";
 
@@ -74,6 +78,10 @@ export function renderProducts(products) {
     const actions = fragment.querySelector(".product-actions");
 
     if (state.user && Number(state.user.id) === Number(product.user_id)) {
+      const editButton = makeButton("Edit", "button secondary");
+      editButton.addEventListener("click", () => handleEditProduct(product));
+      actions.appendChild(editButton);
+
       const deleteButton = makeButton("Delete", "button danger");
       deleteButton.addEventListener("click", () => handleDeleteProduct(product.id));
       actions.appendChild(deleteButton);
@@ -87,6 +95,55 @@ export function renderProducts(products) {
   });
 }
 
+// แก้ไขสินค้า
+export async function handleEditProduct(product) {
+  if (!state.token) {
+    showMessage(elements.productsMessage, "Please login first", "error");
+    return;
+  }
+
+  const title = window.prompt("Edit title", product.title);
+  if (title === null) {
+    return;
+  }
+
+  const description = window.prompt("Edit description", product.description);
+  if (description === null) {
+    return;
+  }
+
+  const price = window.prompt("Edit price", product.price);
+  if (price === null) {
+    return;
+  }
+
+  const categoryId = window.prompt(
+    "Edit category ID (leave blank to remove)",
+    product.category_id ?? ""
+  );
+  if (categoryId === null) {
+    return;
+  }
+
+  try {
+    await apiFetch(`/products/${product.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        title: title.trim(),
+        description: description.trim(),
+        price: Number(price),
+        category_id: normalizeCategoryId(categoryId),
+      }),
+    });
+
+    showMessage(elements.productsMessage, "Product edited", "success");
+    await loadProducts(state.search);
+  } catch (error) {
+    showMessage(elements.productsMessage, error.message, "error");
+  }
+}
+
+// ลบสินค้า
 export async function handleDeleteProduct(productId) {
   if (!state.token) {
     showMessage(elements.productsMessage, "Please login first", "error");

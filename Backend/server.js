@@ -1,3 +1,4 @@
+//SERVER ของ ปีศาจ  ิ  ิ ห้ามระเบิด เซิฟห้ามแตก
 require("dotenv").config();
 
 const app = require("./src/app");

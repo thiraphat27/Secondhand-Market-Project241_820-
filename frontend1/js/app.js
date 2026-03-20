@@ -1,3 +1,4 @@
+// สร้าง event binding
 import { fetchCurrentUser, handleLogin, handleRegister, logout } from "./auth/auth.js";
 import { elements } from "./core/elements.js";
 import { state } from "./core/state.js";

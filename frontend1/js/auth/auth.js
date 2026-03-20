@@ -1,10 +1,11 @@
+// ระบบ login และ register
 import { apiFetch } from "../core/api.js";
 import { elements } from "../core/elements.js";
 import { state } from "../core/state.js";
 import { clearStoredAuth, saveAuth } from "../core/storage.js";
 import { showMessage, syncAuthUI } from "../core/ui.js";
 import { loadInbox, renderInbox } from "../messages/messages.js";
-
+// 
 export async function fetchCurrentUser() {
   try {
     const data = await apiFetch("/auth/me");
@@ -17,7 +18,7 @@ export async function fetchCurrentUser() {
     showMessage(elements.authMessage, error.message, "error");
   }
 }
-
+// ฟังชัน login
 export async function handleLogin(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -40,7 +41,7 @@ export async function handleLogin(event) {
     showMessage(elements.authMessage, error.message, "error");
   }
 }
-
+// ฟังชัน register
 export async function handleRegister(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -64,20 +65,20 @@ export async function handleRegister(event) {
     showMessage(elements.authMessage, error.message, "error");
   }
 }
-
+// เซฟข้อมูลที่ login 
 export function persistAuth(token, user) {
   state.token = token;
   state.user = user;
   saveAuth(token, user);
   syncAuthUI();
 }
-
+// ล้างข้อมูลที่ login
 export function clearAuth() {
   state.token = "";
   state.user = null;
   clearStoredAuth();
 }
-
+// ฟังก์ชัน logout
 export function logout() {
   clearAuth();
   syncAuthUI();

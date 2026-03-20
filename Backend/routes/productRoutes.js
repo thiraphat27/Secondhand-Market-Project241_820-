@@ -1,3 +1,4 @@
+//กำหนดเส้นทางสำหรับการจัดการสินค้า สร้าง แก้ไข ลบ และค้นหาสินค้า
 const express = require("express");
 const productController = require("../controllers/productController");
 const { protect } = require("../middleware/authMiddleware");
@@ -11,6 +12,7 @@ router.get("/user/:id", productController.getProductsByUser);
 router.get("/:id", productController.getProductById);
 
 router.post("/", protect, productController.createProduct);
+router.patch("/:id", protect, productController.editProduct);
 router.put("/:id", protect, productController.updateProduct);
 router.delete("/:id", protect, productController.deleteProduct);
 

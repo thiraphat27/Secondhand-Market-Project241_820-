@@ -1,3 +1,4 @@
+// เเชทเอาไว้ติดต่อ
 import { apiFetch } from "../core/api.js";
 import { elements } from "../core/elements.js";
 import { state } from "../core/state.js";
@@ -29,7 +30,7 @@ export async function handleSendMessage(product) {
     showMessage(elements.productsMessage, error.message, "error");
   }
 }
-
+// inbox
 export async function loadInbox() {
   if (!state.user) {
     renderInbox([]);
@@ -48,7 +49,7 @@ export async function loadInbox() {
     showMessage(elements.inboxMessage, error.message, "error");
   }
 }
-
+// สาง inbox มายังเว็บ
 export function renderInbox(messages) {
   elements.inboxList.innerHTML = "";
 

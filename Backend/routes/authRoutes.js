@@ -1,3 +1,4 @@
+//กำหนดเส้นทางสำหรับการลงทะเบียน ,เข้าสู่ระบบ
 const express = require("express");
 const authController = require("../controllers/authController");
 const { protect } = require("../middleware/authMiddleware");

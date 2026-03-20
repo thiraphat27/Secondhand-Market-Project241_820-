@@ -1,6 +1,7 @@
+// ระบบ UI
 import { elements } from "./elements.js";
 import { state } from "./state.js";
-
+// 
 export function toggleAuthForm(mode) {
   const loginActive = mode === "login";
   elements.loginForm.classList.toggle("hidden", !loginActive);
@@ -9,7 +10,7 @@ export function toggleAuthForm(mode) {
   elements.showRegister.classList.toggle("active", !loginActive);
   showMessage(elements.authMessage, "", "info");
 }
-
+// สภานะการ login
 export function syncAuthUI() {
   const isLoggedIn = Boolean(state.token && state.user);
   elements.logoutButton.classList.toggle("hidden", !isLoggedIn);
@@ -17,7 +18,7 @@ export function syncAuthUI() {
     ? `Login: ${state.user.username} (#${state.user.id})`
     : "Guest";
 }
-
+// โชว์ข้อความ
 export function showMessage(target, text, type) {
   if (!text) {
     target.className = "message hidden";
@@ -28,7 +29,7 @@ export function showMessage(target, text, type) {
   target.className = `message ${type}`;
   target.textContent = text;
 }
-
+// ปุ่ม
 export function makeButton(label, className) {
   const button = document.createElement("button");
   button.type = "button";
@@ -36,7 +37,7 @@ export function makeButton(label, className) {
   button.textContent = label;
   return button;
 }
-
+// กำหนดราคา
 export function formatPrice(price) {
   return new Intl.NumberFormat("th-TH", {
     style: "currency",
@@ -44,7 +45,7 @@ export function formatPrice(price) {
     maximumFractionDigits: 0,
   }).format(Number(price || 0));
 }
-
+// กำหนดหมวดหมู่
 export function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")

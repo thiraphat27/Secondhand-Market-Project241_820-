@@ -1,3 +1,5 @@
+//เรียกข้อมูลจาก Backend
+
 import { state } from "./state.js";
 
 const configuredApiBase = document
@@ -11,6 +13,7 @@ const API_BASE =
     ? `${window.location.origin}/api`
     : "http://localhost:5000/api");
 
+// เป็นฟังชันเรียก api
 export async function apiFetch(path, options = {}) {
   const headers = {
     "Content-Type": "application/json",

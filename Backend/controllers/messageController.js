@@ -1,5 +1,8 @@
+//MessageController สำหรับส่งข้อความระหว่างผู้ใช้และผู้ขาย
+
 const db = require("../config/db");
 
+//SEND MESSAGE
 exports.sendMessage = async (req, res) => {
   const { receiver_id, product_id, message } = req.body;
 
@@ -29,6 +32,7 @@ exports.sendMessage = async (req, res) => {
   }
 };
 
+//GET MESSAGES BY PRODUCT
 exports.getMessagesByProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,6 +58,7 @@ exports.getMessagesByProduct = async (req, res) => {
   }
 };
 
+//GET MESSAGES BY USER (INBOX)
 exports.getMessagesByUser = async (req, res) => {
   try {
     const { id } = req.params;

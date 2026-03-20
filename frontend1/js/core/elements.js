@@ -1,3 +1,4 @@
+// องค์ประกอบ
 export const elements = {
   authStatus: document.getElementById("auth-status"),
   logoutButton: document.getElementById("logout-button"),

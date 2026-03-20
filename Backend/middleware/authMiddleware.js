@@ -1,6 +1,9 @@
+//AuthMiddleware สำหรับตรวจสอบ token และยืนยันตัวตนของผู้ใช้ก่อนเข้าถึง
+
 const jwt = require("jsonwebtoken");
 const db = require("../config/db");
 
+//protect middleware
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || "";

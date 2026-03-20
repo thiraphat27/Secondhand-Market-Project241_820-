@@ -1,3 +1,4 @@
+// สถาะลักษณะของเว็บ
 import { STORAGE_KEYS, readStoredUser } from "./storage.js";
 
 export const state = {

@@ -16,9 +16,9 @@
           </p>
         </div>
         <div class="topbar-actions">
-          <span id="auth-status" class="status-pill">Guest</span>
+          <span id="auth-status" class="status-pill">ผู้ใช้</span>
           <button id="logout-button" class="button secondary hidden" type="button">
-            Logout
+            ลงชื่อออก
           </button>
         </div>
       </header>
@@ -33,11 +33,11 @@
 
           <form id="login-form" class="stack">
             <label>
-              <span>Email</span>
+              <span>อีเมล</span>
               <input name="email" required type="email" />
             </label>
             <label>
-              <span>Password</span>
+              <span>รหัสผ่าน</span>
               <input name="password" required type="password" />
             </label>
             <button class="button" type="submit">Login</button>
@@ -45,15 +45,15 @@
 
           <form id="register-form" class="stack hidden">
             <label>
-              <span>Username</span>
+              <span>ชื่อผู้ใช้</span>
               <input name="username" required type="text" />
             </label>
             <label>
-              <span>Email</span>
+              <span>อีเมล</span>
               <input name="email" required type="email" />
             </label>
             <label>
-              <span>Password</span>
+              <span>รหัสผ่าน</span>
               <input name="password" minlength="6" required type="password" />
             </label>
             <button class="button" type="submit">Register</button>
@@ -63,35 +63,35 @@
         </section>
 
         <section class="panel">
-          <h2>Add Product</h2>
+          <h2>เพิ่มสินค้า</h2>
           <form id="product-form" class="stack">
             <label>
-              <span>Title</span>
+              <span>ชื่อสินค้า</span>
               <input name="title" required type="text" />
             </label>
             <label>
-              <span>Description</span>
+              <span>รายละเอียด</span>
               <textarea name="description" required rows="4"></textarea>
             </label>
             <label>
-              <span>Price</span>
+              <span>ราคา</span>
               <input min="0" name="price" required type="number" />
             </label>
             <label>
-              <span>Category ID</span>
+              <span>หมวดหมู่สินค้า</span>
               <input min="1" name="category_id" type="number" />
             </label>
-            <button class="button" type="submit">Save Product</button>
+            <button class="button" type="submit">บันทึกสินค้า</button>
           </form>
           <div id="product-message" class="message hidden"></div>
         </section>
 
         <section class="panel panel-wide">
           <div class="section-head">
-            <h2>Products</h2>
+            <h2>สินค้า</h2>
             <form id="search-form" class="search-row">
-              <input id="search-input" placeholder="Search product..." type="text" />
-              <button class="button" type="submit">Search</button>
+              <input id="search-input" placeholder="ค้นหาสินค้า..." type="text" />
+              <button class="button" type="submit">ค้นหา</button>
             </form>
           </div>
 
@@ -101,9 +101,9 @@
 
         <section class="panel panel-wide">
           <div class="section-head">
-            <h2>Inbox</h2>
+            <h2>ข้อความ</h2>
             <button id="refresh-inbox" class="button secondary" type="button">
-              Refresh Inbox
+              รีเฟรช ข้อความ
             </button>
           </div>
           <div id="inbox-message" class="message hidden"></div>

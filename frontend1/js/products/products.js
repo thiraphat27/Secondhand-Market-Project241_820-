@@ -78,15 +78,15 @@ export function renderProducts(products) {
     const actions = fragment.querySelector(".product-actions");
 
     if (state.user && Number(state.user.id) === Number(product.user_id)) {
-      const editButton = makeButton("Edit", "button secondary");
+      const editButton = makeButton("แก้ไขสินค้า", "button secondary");
       editButton.addEventListener("click", () => handleEditProduct(product));
       actions.appendChild(editButton);
 
-      const deleteButton = makeButton("Delete", "button danger");
+      const deleteButton = makeButton("ลบสินค้า", "button danger");
       deleteButton.addEventListener("click", () => handleDeleteProduct(product.id));
       actions.appendChild(deleteButton);
     } else {
-      const messageButton = makeButton("Send Message", "button secondary");
+      const messageButton = makeButton("ส่งข้อความ", "button secondary");
       messageButton.addEventListener("click", () => handleSendMessage(product));
       actions.appendChild(messageButton);
     }
